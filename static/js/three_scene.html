@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  html, body { margin:0; padding:0; overflow:hidden; background:transparent; }
+  #canvas-container { width:100%; height:460px; position:relative; }
+  #overlay-text {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    text-align:center; font-family:'Orbitron','Rajdhani',sans-serif; pointer-events:none; width:90%;
+  }
+  /* ---- Modo claro (default): estilo neon original, sin cambios ---- */
+  #overlay-text h1 {
+    font-size:3rem; margin:0; color:#00F5FF;
+    text-shadow:0 0 10px #00F5FF,0 0 30px #00F5FF,0 0 60px #FF00FF33;
+    letter-spacing:6px;
+  }
+  #overlay-text p {
+    font-family:'Share Tech Mono',monospace; color:#8080B0; font-size:1rem; margin-top:8px;
+    letter-spacing:2px;
+  }
+  .cursor { display:inline-block; width:8px; background:#00F5FF; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+
+  /* ---- Modo oscuro: paleta "Atardecer de pizarra" (crema + azul pizarra),
+         tomada de la imagen de referencia del usuario ---- */
+  body.dark-mode #overlay-text h1 {
+    color:#EDE7DA;
+    text-shadow:0 0 16px rgba(216,195,156,0.45), 0 0 34px rgba(124,139,150,0.35);
+  }
+  body.dark-mode #overlay-text p { color:#A79E8C; }
+  body.dark-mode .cursor { background:#D8C39C; }
+</style>
+</head>
+<body>
+<div id="canvas-container">
+  <div id="overlay-text">
+    <h1 id="title-text"></h1>
+    <p id="subtitle-text"><span class="cursor">&nbsp;</span></p>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  // --------------------------------------------------------------------
+  // Deteccion de tema: este iframe no comparte CSS con la app padre, asi
+  // que leemos la clase "dark-mode" del <body> del documento padre (la
+  // misma que usa components/theme_toggle.py) para decidir la paleta de
+  // la escena 3D. El modo claro conserva exactamente la escena neon
+  // original. El modo oscuro usa la paleta "Atardecer de pizarra" (crema
+  // calido + azules pizarra) tomada de la imagen de referencia del usuario.
+  // --------------------------------------------------------------------
+  function isDarkTheme() {
+    try {
+      return window.parent.document.body.classList.contains('dark-mode');
+    } catch (e) {
+      return false;
+    }
+  }
+
+  const PALETTES = {
+    light: {
+      ambient: 0x1a1a4e, ambientIntensity: 0.6,
+      point1: 0x00F5FF, point2: 0xFF00FF, point3: 0x39FF14,
+      pointIntensity1: 2, pointIntensity2: 1.5, pointIntensity3: 1,
+      gridMain: 0x00F5FF, gridSub: 0x1A1A3E, gridOpacity: 0.35,
+      sphereColor: 0x00F5FF, sphereEmissive: 0xFF00FF, sphereEmissiveIntensity: 0.25,
+      glowColor: 0x00F5FF, glowOpacity: 0.05,
+      rings: [0x00F5FF, 0xFF00FF, 0x39FF14],
+      particlePalette: [[0,0.96,1],[1,0,1],[0.22,1,0.08],[0.75,0,1]],
+      lineColors: [0x00F5FF, 0xFF00FF]
+    },
+    dark: {
+      ambient: 0x1c1810, ambientIntensity: 0.6,
+      point1: 0x7C8B96, point2: 0xD8C39C, point3: 0x46586A,
+      pointIntensity1: 2, pointIntensity2: 1.5, pointIntensity3: 1,
+      gridMain: 0x7C8B96, gridSub: 0x2A333B, gridOpacity: 0.35,
+      sphereColor: 0x7C8B96, sphereEmissive: 0xD8C39C, sphereEmissiveIntensity: 0.25,
+      glowColor: 0x7C8B96, glowOpacity: 0.06,
+      rings: [0x7C8B96, 0xD8C39C, 0x46586A],
+      particlePalette: [
+        [0.486,0.545,0.588], [0.847,0.765,0.612],
+        [0.275,0.345,0.416], [0.929,0.906,0.855]
+      ],
+      lineColors: [0x7C8B96, 0xD8C39C]
+    }
+  };
+
+  const pal = isDarkTheme() ? PALETTES.dark : PALETTES.light;
+
+  const container = document.getElementById('canvas-container');
+  const w = container.clientWidth || window.innerWidth;
+  const h = 460;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, w/h, 0.1, 1000);
+  camera.position.set(0, 2, 8);
+
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  // Lighting
+  scene.add(new THREE.AmbientLight(pal.ambient, pal.ambientIntensity));
+  const pCyan = new THREE.PointLight(pal.point1, pal.pointIntensity1, 20); pCyan.position.set(5,5,5); scene.add(pCyan);
+  const pMag = new THREE.PointLight(pal.point2, pal.pointIntensity2, 15); pMag.position.set(-5,-5,5); scene.add(pMag);
+  const pGreen = new THREE.PointLight(pal.point3, pal.pointIntensity3, 10); pGreen.position.set(0,5,-5); scene.add(pGreen);
+
+  // Infinite grid
+  const gridSize = 40, gridDiv = 40;
+  const grid = new THREE.GridHelper(gridSize, gridDiv, pal.gridMain, pal.gridSub);
+  grid.position.y = -2;
+  grid.material.opacity = pal.gridOpacity;
+  grid.material.transparent = true;
+  scene.add(grid);
+
+  // Central holographic sphere
+  const sphereGeo = new THREE.SphereGeometry(1.4, 20, 20);
+  const sphereMat = new THREE.MeshPhongMaterial({
+    color: pal.sphereColor, emissive: pal.sphereEmissive, emissiveIntensity: pal.sphereEmissiveIntensity,
+    wireframe: true, transparent: true, opacity: 0.85
+  });
+  const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+  scene.add(sphere);
+
+  const glowGeo = new THREE.SphereGeometry(1.7, 16, 16);
+  const glowMat = new THREE.MeshBasicMaterial({ color: pal.glowColor, transparent:true, opacity:pal.glowOpacity });
+  const glowSphere = new THREE.Mesh(glowGeo, glowMat);
+  scene.add(glowSphere);
+
+  // Orbital rings
+  const ringColors = pal.rings;
+  const rings = [];
+  for (let i=0;i<3;i++){
+    const torus = new THREE.Mesh(
+      new THREE.TorusGeometry(2.2 + i*0.15, 0.01, 8, 80),
+      new THREE.MeshBasicMaterial({ color: ringColors[i], wireframe:true, transparent:true, opacity:0.6 })
+    );
+    torus.rotation.x = (Math.PI/4) * i;
+    torus.rotation.y = (Math.PI/6) * i;
+    scene.add(torus);
+    rings.push(torus);
+  }
+
+  // Floating particles
+  const particleCount = 900;
+  const positions = new Float32Array(particleCount*3);
+  const colors = new Float32Array(particleCount*3);
+  const palette = pal.particlePalette;
+  for (let i=0;i<particleCount;i++){
+    positions[i*3] = (Math.random()-0.5)*20;
+    positions[i*3+1] = (Math.random()-0.5)*10;
+    positions[i*3+2] = (Math.random()-0.5)*20;
+    const c = palette[Math.floor(Math.random()*palette.length)];
+    colors[i*3]=c[0]; colors[i*3+1]=c[1]; colors[i*3+2]=c[2];
+  }
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+  particleGeo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+  const particleMat = new THREE.PointsMaterial({ size:0.05, vertexColors:true, transparent:true, opacity:0.85 });
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  // Ascending data lines
+  const lineGroup = new THREE.Group();
+  const dataLines = [];
+  for (let i=0;i<16;i++){
+    const geo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0,0,0), new THREE.Vector3(0,1.2,0)
+    ]);
+    const mat = new THREE.LineBasicMaterial({ color: i%2===0?pal.lineColors[0]:pal.lineColors[1], transparent:true, opacity:0.5 });
+    const line = new THREE.Line(geo, mat);
+    line.position.set((Math.random()-0.5)*14, -3, (Math.random()-0.5)*14);
+    line.userData.speed = 0.01 + Math.random()*0.02;
+    lineGroup.add(line);
+    dataLines.push(line);
+  }
+  scene.add(lineGroup);
+
+  // Mouse parallax
+  let mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', (e)=>{
+    mouseX = (e.clientX / window.innerWidth - 0.5);
+    mouseY = (e.clientY / window.innerHeight - 0.5);
+  });
+
+  // Typewriter
+  const titleEl = document.getElementById('title-text');
+  const subtitleEl = document.getElementById('subtitle-text');
+  const titleText = "IMPORTPREDIC";
+  let ti = 0;
+  function typeTitle(){
+    if (ti <= titleText.length){
+      titleEl.textContent = titleText.slice(0, ti);
+      ti++;
+      setTimeout(typeTitle, 90);
+    }
+  }
+  typeTitle();
+
+  let clock = new THREE.Clock();
+
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    sphere.rotation.x = t*0.25;
+    sphere.rotation.y = t*0.35;
+    glowSphere.rotation.y = -t*0.1;
+
+    rings.forEach((r, i) => { r.rotation.z += 0.002 * (i+1); });
+
+    particles.rotation.y = t*0.02;
+    const posAttr = particles.geometry.attributes.position;
+    for (let i=0;i<particleCount;i+=3){
+      posAttr.array[i*3+1] += Math.sin(t + i) * 0.0007;
+    }
+    posAttr.needsUpdate = true;
+
+    dataLines.forEach(line => {
+      line.position.y += line.userData.speed;
+      if (line.position.y > 4) line.position.y = -3;
+    });
+
+    grid.position.z = (t*0.6) % 1;
+
+    camera.position.x += (mouseX*1.2 - camera.position.x) * 0.02;
+    camera.position.y += (2 - mouseY*1.0 - camera.position.y) * 0.02;
+    camera.lookAt(0,0,0);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const nw = container.clientWidth || window.innerWidth;
+    camera.aspect = nw/h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nw, h);
+  });
+})();
+</script>
+</body>
+</html>

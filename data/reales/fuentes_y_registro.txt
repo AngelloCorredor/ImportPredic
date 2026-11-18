@@ -1,0 +1,46 @@
+
+[1/4] Importaciones mensuales (UN Comtrade / DANE)...
+   2015: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2015: 1 mes(es) con datos
+   2016: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2016: 12 mes(es) con datos
+   2017: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2017: 12 mes(es) con datos
+   2018: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2018: 12 mes(es) con datos
+   2019: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2019: 12 mes(es) con datos
+   2020: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2020: 12 mes(es) con datos
+   2021: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2021: 12 mes(es) con datos
+   2022: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2022: 12 mes(es) con datos
+   2023: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2023: 12 mes(es) con datos
+   2024: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2024: 12 mes(es) con datos
+   2025: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2025: 12 mes(es) con datos
+   2026: consulta anual falló (HTTP Error 400: Bad Request); se pide mes por mes
+   2026: 4 mes(es) con datos
+   Aviso: 52 mes(es) sin valor FOB; se usó el valor CIF reportado
+
+[2/4] Variables macroeconómicas...
+   TRM: Superfinanciera (datos.gov.co) -> 2014-11 a 2026-10 (144 meses)
+   Tasa de política: Banco de la República (SDMX) -> 2014-01 a 2026-10 (154 meses)
+   IPC (índice): Banco Mundial GEM (CPTOTNSXN) -> 2014-01 a 2026-07 (151 meses)
+   Producción industrial: Banco Mundial GEM (IPTOTNSKD) -> 2014-01 a 2026-06 (150 meses)
+
+[3/4] Uniendo y revisando...
+
+[4/4] Resumen
+   Periodo: 2015-01 a 2026-04 (136 meses)
+   2903.39: promedio 112,529 kg/mes; meses sin dato: 13
+   3926.90: promedio 1,714,297 kg/mes; meses sin dato: 15
+   8414.30: promedio 1,174,454 kg/mes; meses sin dato: 12
+   8537.10: promedio 88,182 kg/mes; meses sin dato: 13
+   trm_peso_dolar: Superfinanciera (datos.gov.co)
+   ipc_variacion_mensual: Banco Mundial GEM (CPTOTNSXN), variación mensual calculada
+   tasa_interes_referencia: Banco de la República (SDMX)
+   ipi_manufacturero: Banco Mundial GEM (IPTOTNSKD)

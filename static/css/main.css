@@ -1,0 +1,470 @@
+/* ============================================================
+   GRÁFICAS PLOTLY — texto, grillas y leyenda adaptados al tema
+   ============================================================
+   Plotly fija estos colores directamente en el SVG desde Python
+   (get_plotly_theme(), pensado para el fondo oscuro fijo de los
+   graficos), y Python no tiene forma de saber si el interruptor
+   claro/oscuro de la app esta activo. Como los graficos se
+   renderizan en el DOM principal (no en un iframe aparte),
+   podemos sobreescribir ese fill/stroke aqui con las MISMAS
+   variables de tema (que ya cambian solas segun .dark-mode),
+   asi el texto, la grilla y la leyenda de cada grafico quedan
+   siempre legibles sin importar el modo activo.
+============================================================ */
+.js-plotly-plot .xtick text,
+.js-plotly-plot .ytick text,
+.js-plotly-plot .angularaxistick text,
+.js-plotly-plot .radialaxistick text,
+.js-plotly-plot .legendtext,
+.js-plotly-plot .gtitle,
+.js-plotly-plot .g-gtitle text,
+.js-plotly-plot .g-xtitle text,
+.js-plotly-plot .g-ytitle text,
+.js-plotly-plot .g-polartitle text,
+.js-plotly-plot .xtitle,
+.js-plotly-plot .ytitle {
+  fill: var(--text-primary) !important;
+}
+.js-plotly-plot .gridlayer path,
+.js-plotly-plot .angular-grid path,
+.js-plotly-plot .radial-grid path,
+.js-plotly-plot .xlines-above, .js-plotly-plot .xlines-below,
+.js-plotly-plot .ylines-above, .js-plotly-plot .ylines-below,
+.js-plotly-plot .zerolinelayer path,
+.js-plotly-plot .angular-line path,
+.js-plotly-plot .radial-line path {
+  stroke: var(--border-strong) !important;
+  stroke-opacity: 0.55 !important;
+}
+.js-plotly-plot .legend .bg {
+  fill: var(--bg-card) !important;
+  fill-opacity: 0.94 !important;
+  stroke: var(--border-strong) !important;
+  stroke-opacity: 0.7 !important;
+}
+/* Las anotaciones ("Pandemia", "Crisis cambiaria") ya llevan un color
+   propio y vivo asignado desde Python, visible en ambos temas -- no
+   se tocan aqui para no perder ese color intencional. */
+
+html, body, [class*="css"] {
+  font-family: var(--font-body);
+}
+
+/* Transicion suave global al cambiar de tema: aplica a casi todo para
+   que el cambio claro/oscuro se sienta como una animacion fluida y no
+   un parpadeo brusco. */
+.stApp, .stApp *,
+section[data-testid="stSidebar"], section[data-testid="stSidebar"] *,
+div[data-testid="stExpander"], div[data-testid="stExpander"] * {
+  transition: background-color 0.5s cubic-bezier(0.65,0,0.35,1),
+              border-color 0.5s cubic-bezier(0.65,0,0.35,1),
+              color 0.5s cubic-bezier(0.65,0,0.35,1),
+              box-shadow 0.5s cubic-bezier(0.65,0,0.35,1) !important;
+}
+
+.stApp {
+  background: var(--bg-app);
+  color: var(--text-primary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-app); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+::selection { background: var(--primary-light); color: var(--primary-dark); }
+
+/* Hide default Streamlit chrome */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+header[data-testid="stHeader"] { background: transparent; }
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-soft);
+  box-shadow: 4px 0 24px rgba(108, 99, 255, 0.05);
+}
+/* Modo oscuro: la sombra del sidebar usa el nuevo acento pizarra en vez del morado */
+body.dark-mode section[data-testid="stSidebar"] {
+  box-shadow: 4px 0 24px rgba(124, 139, 150, 0.10);
+}
+section[data-testid="stSidebar"] * { color: var(--text-primary) !important; }
+section[data-testid="stSidebar"] a { color: var(--text-secondary) !important; }
+
+/* Headings */
+h1, h2, h3 {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.2px;
+  color: var(--text-primary);
+}
+h1 { color: var(--text-primary); }
+
+/* Buttons */
+.stButton > button, .stDownloadButton > button {
+  font-family: var(--font-display);
+  font-weight: 600;
+  background: var(--primary);
+  border: none;
+  color: var(--text-on-primary) !important;
+  border-radius: var(--border-radius);
+  transition: var(--transition-fast);
+  letter-spacing: 0.1px;
+  box-shadow: var(--shadow-primary);
+}
+.stButton > button:hover, .stDownloadButton > button:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 10px 22px rgba(108, 99, 255, 0.35);
+  transform: translateY(-1px);
+}
+/* Modo oscuro: brillo del boton en hover con el nuevo acento pizarra */
+body.dark-mode .stButton > button:hover, body.dark-mode .stDownloadButton > button:hover {
+  box-shadow: 0 10px 22px rgba(124, 139, 150, 0.40);
+}
+.stButton > button p, .stDownloadButton > button p { color: var(--text-on-primary) !important; }
+
+/* Boton deshabilitado (p.ej. "En uso" en Historial): Streamlit lo
+   pinta con su gris nativo de muy bajo contraste (casi invisible en
+   ambos temas). Lo forzamos a un gris tematico, legible en claro y
+   oscuro. */
+.stButton > button:disabled, .stDownloadButton > button:disabled {
+  background: var(--border-strong) !important;
+  color: var(--text-secondary) !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  cursor: not-allowed;
+}
+.stButton > button:disabled p, .stDownloadButton > button:disabled p {
+  color: var(--text-secondary) !important;
+}
+
+/* Inputs */
+.stTextInput input, .stNumberInput input, .stDateInput input, .stSelectbox div[data-baseweb="select"] {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--border-radius) !important;
+}
+.stTextInput input:focus, .stNumberInput input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-light) !important;
+}
+
+/* ================================================================
+   SELECTBOX — FIX: el texto interno del valor seleccionado no
+   heredaba el color del tema (quedaba con el color nativo de
+   Streamlit, generalmente blanco), por lo que sobre el fondo claro
+   forzado arriba el texto se veia invisible ("select vacio").
+================================================================ */
+.stSelectbox div[data-baseweb="select"] * {
+  color: var(--text-primary) !important;
+}
+.stSelectbox svg { fill: var(--text-secondary) !important; }
+/* Menu desplegable de opciones (se abre en un popover aparte) */
+div[data-baseweb="popover"] ul[role="listbox"] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+}
+div[data-baseweb="popover"] ul[role="listbox"] li {
+  color: var(--text-primary) !important;
+}
+div[data-baseweb="popover"] ul[role="listbox"] li:hover {
+  background: var(--bg-hover) !important;
+}
+
+/* ================================================================
+   FILE UPLOADER — FIX: el widget nativo de Streamlit no tenia
+   ningun estilo aplicado, por lo que quedaba con su tema oscuro
+   por defecto (fondo negro, boton "Upload" casi invisible) sin
+   importar si el sistema estaba en modo claro u oscuro.
+   FIX 2 (encontrado probando con captura real): el selector usaba
+   "div[data-testid=...]", pero el elemento real que Streamlit dibuja
+   para la zona de carga es un <section>, no un <div> -- igual que el
+   caso de "stMetricLabel", el selector con etiqueta nunca coincidia
+   y la regla completa quedaba sin efecto. Se quita la restriccion de
+   etiqueta para que aplique sin importar la version de Streamlit.
+================================================================ */
+[data-testid="stFileUploaderDropzone"] {
+  background: var(--bg-card-alt) !important;
+  border: 2px dashed var(--border-strong) !important;
+  border-radius: var(--border-radius-lg) !important;
+}
+[data-testid="stFileUploaderDropzone"] * {
+  color: var(--text-primary) !important;
+}
+[data-testid="stFileUploaderDropzone"] button {
+  background: var(--primary) !important;
+  color: var(--text-on-primary) !important;
+  border: none !important;
+  border-radius: var(--border-radius) !important;
+}
+[data-testid="stFileUploaderDropzone"] button * {
+  color: var(--text-on-primary) !important;
+}
+[data-testid="stFileUploaderDropzone"] svg {
+  fill: var(--text-secondary) !important;
+}
+[data-testid="stFileUploaderFileTypeInfo"] {
+  color: var(--text-secondary) !important;
+}
+/* Archivo ya cargado (chip con el nombre del archivo).
+   FIX 3 (confirmado corriendo la app real): en esta version de
+   Streamlit el chip NO usa el testid "stFileUploaderFile" sino
+   "stFileChip" -- por eso la regla anterior nunca coincidia y el
+   chip se veia con su fondo blanco nativo y texto casi invisible. */
+[data-testid="stFileChip"], [data-testid="stFileUploaderFile"] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: var(--border-radius) !important;
+  color: var(--text-primary) !important;
+}
+[data-testid="stFileChip"] *, [data-testid="stFileUploaderFile"] * {
+  color: var(--text-primary) !important;
+}
+[data-testid="stFileChip"] svg { fill: var(--text-secondary) !important; }
+
+/* ================================================================
+   ETIQUETAS DE WIDGETS Y TEXTOS DE AYUDA — FIX: st.file_uploader,
+   st.date_input, st.multiselect, etc. dibujan su "label" (p.ej.
+   "Selecciona uno o más archivos", "Fecha de corte train/test") con
+   el color oscuro nativo de Streamlit (pensado para fondo claro),
+   por lo que en modo oscuro quedaban casi invisibles. En modo oscuro
+   se resaltan en dorado/ambar para que sean claramente legibles.
+================================================================ */
+[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] label,
+[data-testid="stWidgetLabel"] span {
+  transition: var(--transition-fast);
+}
+body.dark-mode [data-testid="stWidgetLabel"] p,
+body.dark-mode [data-testid="stWidgetLabel"] label,
+body.dark-mode [data-testid="stWidgetLabel"] span {
+  color: var(--accent-amber) !important;
+  font-weight: 600;
+}
+
+/* ================================================================
+   DATE INPUT — FIX: st.date_input no renderiza un <input> plano
+   (el selector ".stDateInput input" nunca coincidia); es un campo
+   compuesto (dia/mes/año) con testid "stDateInputField" que se
+   quedaba con el fondo blanco nativo de Streamlit sin importar el
+   tema activo.
+================================================================ */
+[data-testid="stDateInputField"] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--border-radius) !important;
+  color: var(--text-primary) !important;
+}
+[data-testid="stDateInputField"] * {
+  color: var(--text-primary) !important;
+}
+
+/* ================================================================
+   MULTISELECT — FIX (confirmado inspeccionando el DOM real): este
+   componente no usa BaseWeb ("[data-baseweb='select']" nunca
+   coincidia) sino "react-aria-ComboBox", y el div que realmente
+   pinta el fondo blanco cambia de posicion segun el estado del
+   widget (no tiene testid propio y su clase es un hash inestable
+   de Streamlit). En vez de perseguir esa clase, forzamos el fondo
+   en TODOS los divs internos del componente -- las reglas mas
+   especificas de mas abajo (chips seleccionados) siguen ganando
+   por especificidad de selector.
+================================================================ */
+.stMultiSelect div,
+.stMultiSelect div[data-baseweb="select"] {
+  background-color: var(--bg-card) !important;
+}
+.stMultiSelect > div {
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--border-radius) !important;
+}
+.stMultiSelect div[data-baseweb="select"] * {
+  color: var(--text-primary) !important;
+}
+.stMultiSelect input,
+.stMultiSelect [data-testid="stMultiSelectTagsContainer"] {
+  color: var(--text-primary) !important;
+}
+.stMultiSelect input::placeholder { color: var(--text-secondary) !important; opacity: 1; }
+.stMultiSelect svg { fill: var(--text-secondary) !important; }
+.stMultiSelect span[data-baseweb="tag"],
+.stMultiSelect [data-testid="stMultiSelectTagsContainer"] > div:not(:has(input)) {
+  background-color: var(--primary) !important;
+  border-radius: 6px !important;
+}
+.stMultiSelect span[data-baseweb="tag"] *,
+.stMultiSelect [data-testid="stMultiSelectTagsContainer"] > div:not(:has(input)) * {
+  color: var(--text-on-primary) !important;
+}
+/* Menu desplegable de opciones (portal aparte, tambien en modo oscuro) */
+[id^="react-aria"][role="listbox"], ul[role="listbox"] {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-strong) !important;
+  color: var(--text-primary) !important;
+}
+[role="listbox"] * { color: var(--text-primary) !important; }
+[role="option"]:hover, [role="option"][aria-selected="true"] {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Slider */
+.stSlider [role="slider"] { background-color: var(--primary) !important; box-shadow: 0 2px 8px rgba(108,99,255,0.4); }
+.stSlider [data-baseweb="slider"] > div > div { background: var(--primary) !important; }
+/* Modo oscuro: resplandor del control del slider con el nuevo acento pizarra */
+body.dark-mode .stSlider [role="slider"] { box-shadow: 0 2px 8px rgba(124,139,150,0.45); }
+
+/* Metrics */
+div[data-testid="stMetric"] {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-medium);
+}
+div[data-testid="stMetric"]:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+div[data-testid="stMetricValue"] {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  color: var(--primary) !important;
+}
+/* FIX: el testid "stMetricLabel" no siempre esta en un <div> (en
+   versiones recientes de Streamlit es un <label>), por lo que el
+   selector "div[data-testid=...]" nunca coincidia y el titulo de la
+   metrica se quedaba con el color blanco nativo de Streamlit sobre
+   la card clara (titulo invisible, salvo el que se seleccionaba con
+   el mouse). Se quita la restriccion de etiqueta y se cubre tambien
+   a los hijos (el texto vive dentro de un <p> interno). */
+[data-testid="stMetricLabel"],
+[data-testid="stMetricLabel"] * {
+  color: var(--text-secondary) !important;
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* DataFrames */
+[data-testid="stDataFrame"] { border: 1px solid var(--border-soft); border-radius: var(--border-radius); overflow: hidden; }
+
+/* ================================================================
+   EXPANDER — FIX: el selector viejo ".streamlit-expanderHeader" ya
+   no existe en versiones recientes de Streamlit (usa data-testid).
+   Sin este fix, el header del expander queda con el tema nativo
+   oscuro de Streamlit mientras el resto del panel ya esta en el
+   tema claro personalizado, causando el contraste roto reportado
+   (texto ilegible sobre fondo negro en "Guia de Uso del Sistema").
+================================================================ */
+div[data-testid="stExpander"] {
+  border: 1px solid var(--border-soft) !important;
+  border-radius: var(--border-radius) !important;
+  background: var(--bg-card) !important;
+  overflow: hidden;
+}
+div[data-testid="stExpander"] summary {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+div[data-testid="stExpander"] summary:hover {
+  background: var(--bg-hover) !important;
+}
+div[data-testid="stExpander"] summary svg {
+  fill: var(--text-primary) !important;
+}
+div[data-testid="stExpander"] summary p,
+div[data-testid="stExpander"] summary span {
+  color: var(--text-primary) !important;
+}
+div[data-testid="stExpanderDetails"] {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+/* Alias retrocompatible por si alguna version usa la clase antigua */
+.streamlit-expanderHeader, details {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: var(--border-radius) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Tabs */
+button[data-baseweb="tab"] { font-family: var(--font-display); font-weight: 500; color: var(--text-secondary); }
+button[data-baseweb="tab"][aria-selected="true"] {
+  color: var(--primary) !important;
+  border-bottom: 2px solid var(--primary) !important;
+}
+
+/* Progress bar */
+.stProgress > div > div > div {
+  background: linear-gradient(90deg, var(--primary), var(--accent-violet));
+}
+
+/* ================================================================
+   ALERTS — FIX: forzar color de texto segun el tipo de alerta.
+   Antes el st.warning() (fondo amarillo) no tenia color de texto
+   forzado, quedando casi ilegible (texto claro sobre fondo amarillo
+   claro). Streamlit distingue el tipo de alerta por el icono/kind
+   interno; usamos el color de icono como referencia para diferenciar.
+================================================================ */
+div[data-testid="stAlert"] {
+  border-radius: var(--border-radius);
+  font-family: var(--font-body);
+  border: 1px solid var(--border-soft);
+}
+div[data-testid="stAlert"] p,
+div[data-testid="stAlert"] span,
+div[data-testid="stAlert"] li {
+  color: inherit !important;
+}
+/* st.warning */
+div[data-testid="stAlert"][data-baseweb="notification"]:has(svg[fill="rgb(180, 129, 4)"]),
+div[data-testid="stAlert"].st-emotion-cache-warning,
+div[data-testid="stNotification"] {
+  background: var(--alert-warning-bg) !important;
+  border-color: var(--alert-warning-border) !important;
+  color: var(--alert-warning-text) !important;
+}
+/* Fallback universal: forzar contraste legible en TODAS las alertas
+   usando el color de texto principal del tema si el selector especifico
+   de arriba no coincide con la version de Streamlit instalada. */
+div[data-testid="stAlert"] {
+  color: var(--text-primary) !important;
+  background: var(--bg-card-alt) !important;
+}
+div[data-testid="stAlert"] * {
+  color: var(--text-primary) !important;
+}
+
+/* Utility classes */
+.neon-text-cyan { color: var(--primary); font-weight: 600; }
+.neon-text-magenta { color: var(--accent-coral); font-weight: 600; }
+.neon-text-green { color: var(--accent-green); font-weight: 600; }
+.neon-text-purple { color: var(--accent-violet); font-weight: 600; }
+
+.card-futurista {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-medium);
+}
+.card-futurista:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+
+.badge-insumo {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-family: var(--font-body); font-weight: 600; font-size: 0.75rem;
+  background: var(--primary-light); border: none; color: var(--primary-dark);
+  margin-right: 6px;
+}
+
+.metric-display {
+  font-family: var(--font-display); font-weight: 700; font-size: 2.2rem; color: var(--primary);
+}
+
+.section-divider {
+  height: 1px; border: none;
+  margin: 36px 0 36px 0;
+  background: var(--border-soft);
+}

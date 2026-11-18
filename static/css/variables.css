@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ==========================================================================
+   VARIABLES.CSS — Sistema dual de tema: MODO CLARO (default) + MODO OSCURO
+   ==========================================================================
+   El modo claro es el :root por defecto (paleta morada pastel original,
+   sin cambios).
+   El modo oscuro se activa agregando la clase .dark-mode al <body>
+   mediante el toggle sol/luna. Paleta "Atardecer de pizarra": crema calido
+   + azules pizarra + azul-marino profundo, tomada directamente de la
+   imagen de referencia del usuario (crema #DAD0C0, azul pizarra #4D5861,
+   pizarra oscura #2A333B, azul-marino #1E2028). Fondo azul-marino muy
+   profundo, tarjetas en los tonos pizarra de la imagen, texto en crema
+   calido y acentos en azul pizarra + dorado envejecido.
+   ========================================================================== */
+
+:root {
+  /* ---- Marca / acentos (MODO CLARO) ---- */
+  --primary: #6C63FF;
+  --primary-dark: #574CE0;
+  --primary-light: #EDEBFC;
+  --primary-soft: #F3F1FD;
+
+  --accent-violet: #8B5CF6;
+  --accent-green: #2ECC8F;
+  --accent-green-bg: #E1F8EF;
+  --accent-amber: #FFB648;
+  --accent-amber-bg: #FFF3E0;
+  --accent-coral: #FF6B81;
+  --accent-coral-bg: #FFE4E8;
+  --accent-blue: #4C9AFF;
+  --accent-blue-bg: #E8F1FF;
+
+  /* ---- Superficies ---- */
+  --bg-app: #F5F4FC;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #FAF9FE;
+  --bg-sidebar: #FFFFFF;
+  --bg-hover: #F3F1FD;
+
+  --border-soft: #ECEAF6;
+  --border-strong: #DEDAF3;
+
+  /* ---- Texto ---- */
+  --text-primary: #2B2A45;
+  --text-secondary: #6B7089;
+  --text-muted: #B4B7C9;
+  --text-on-primary: #FFFFFF;
+
+  /* ---- Alertas: texto/fondo forzados para legibilidad garantizada ---- */
+  --alert-warning-bg: #FFF3E0;
+  --alert-warning-text: #7A5200;
+  --alert-warning-border: #FFD180;
+  --alert-info-bg: #E8F1FF;
+  --alert-info-text: #0D3B7A;
+  --alert-info-border: #A8CBFF;
+  --alert-success-bg: #E1F8EF;
+  --alert-success-text: #0F6B45;
+  --alert-success-border: #9DE8C8;
+  --alert-error-bg: #FFE4E8;
+  --alert-error-text: #8A1230;
+  --alert-error-border: #FFB3BF;
+
+  /* ---- Tipografia ---- */
+  --font-display: 'Poppins', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+
+  /* ---- Sombras suaves (nada de glow neon) ---- */
+  --shadow-sm: 0 1px 2px rgba(43, 42, 69, 0.05);
+  --shadow-card: 0 6px 20px rgba(108, 99, 255, 0.08);
+  --shadow-card-hover: 0 12px 28px rgba(108, 99, 255, 0.16);
+  --shadow-primary: 0 8px 18px rgba(108, 99, 255, 0.28);
+  --shadow-glow: 0 0 0 1px rgba(108, 99, 255, 0.10), 0 10px 28px rgba(108, 99, 255, 0.14);
+  --shadow-glow-strong: 0 0 0 1.5px rgba(108, 99, 255, 0.35), 0 18px 42px rgba(108, 99, 255, 0.26);
+
+  --border-radius: 10px;
+  --border-radius-lg: 18px;
+  --border-radius-xl: 24px;
+
+  --transition-fast: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-medium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-theme: all 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 48px;
+
+  /* ---- Alias retrocompatibles (usados por clases historicas) ---- */
+  --neon-cyan: var(--primary);
+  --neon-magenta: var(--accent-coral);
+  --neon-green: var(--accent-green);
+  --neon-purple: var(--accent-violet);
+  --neon-orange: var(--accent-amber);
+  --neon-blue: var(--accent-blue);
+  --dark-bg: var(--bg-app);
+  --dark-card: var(--bg-card);
+  --dark-border: var(--border-soft);
+  --dark-surface: var(--bg-card-alt);
+  --dark-hover: var(--bg-hover);
+  --text-accent: var(--primary);
+  --shadow-cyan: var(--shadow-card);
+  --shadow-magenta: 0 8px 18px rgba(255, 107, 129, 0.25);
+  --shadow-green: 0 8px 18px rgba(46, 204, 143, 0.25);
+  --shadow-purple: 0 8px 18px rgba(139, 92, 246, 0.25);
+  --border-neon: 1px solid var(--primary);
+  --border-subtle: 1px solid var(--border-soft);
+}
+
+/* ==========================================================================
+   MODO OSCURO — paleta "Atardecer de pizarra" (crema + azules pizarra),
+   tomada de la imagen de referencia del usuario.
+   Se activa agregando la clase "dark-mode" al elemento <body>
+   mediante el toggle sol/luna.
+   ========================================================================== */
+body.dark-mode,
+.dark-mode {
+  --primary: #7C8B96;          /* azul pizarra, aclarado para resaltar en fondo oscuro */
+  --primary-dark: #AEBBC2;     /* variante clara del azul pizarra: texto legible sobre chips/pills translucidos */
+  --primary-light: rgba(124, 139, 150, 0.16);
+  --primary-soft: rgba(124, 139, 150, 0.08);
+
+  --accent-violet: #D8C39C;    /* crema/dorado calido de la imagen, acento secundario */
+  --accent-green: #5FB98A;
+  --accent-green-bg: rgba(95, 185, 138, 0.12);
+  --accent-amber: #D9A44E;
+  --accent-amber-bg: rgba(217, 164, 78, 0.12);
+  --accent-coral: #E0798A;
+  --accent-coral-bg: rgba(224, 121, 138, 0.12);
+  --accent-blue: #6FA0C6;
+  --accent-blue-bg: rgba(111, 160, 198, 0.12);
+
+  /* ---- Superficies: tonos pizarra/azul-marino exactos de la imagen ---- */
+  --bg-app: #15171D;           /* azul-marino profundo, mas oscuro que la imagen para dar fondo */
+  --bg-card: #1E2028;          /* azul-marino de la imagen */
+  --bg-card-alt: #262A34;      /* fondo intermedio de la imagen */
+  --bg-sidebar: #191B21;
+  --bg-hover: #2A333B;         /* pizarra oscura de la imagen */
+
+  --border-soft: #2E3540;
+  --border-strong: #3C4553;
+
+  /* ---- Texto ---- */
+  --text-primary: #EDE7DA;     /* crema calido de la imagen, para texto sobre fondo oscuro */
+  --text-secondary: #A79E8C;
+  --text-muted: #6E6A5C;
+  --text-on-primary: #14161C;
+
+  /* ---- Alertas: texto/fondo forzados para legibilidad garantizada ---- */
+  --alert-warning-bg: rgba(217, 164, 78, 0.10);
+  --alert-warning-text: #F0C879;
+  --alert-warning-border: rgba(217, 164, 78, 0.35);
+  --alert-info-bg: rgba(111, 160, 198, 0.10);
+  --alert-info-text: #9CC3E0;
+  --alert-info-border: rgba(111, 160, 198, 0.32);
+  --alert-success-bg: rgba(95, 185, 138, 0.10);
+  --alert-success-text: #8FE0B6;
+  --alert-success-border: rgba(95, 185, 138, 0.32);
+  --alert-error-bg: rgba(224, 121, 138, 0.10);
+  --alert-error-text: #F0A3AF;
+  --alert-error-border: rgba(224, 121, 138, 0.32);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 0 24px rgba(124, 139, 150, 0.25);
+  --shadow-primary: 0 0 20px rgba(124, 139, 150, 0.35);
+  --shadow-glow: 0 0 0 1px rgba(124, 139, 150, 0.18), 0 10px 30px rgba(124, 139, 150, 0.22);
+  --shadow-glow-strong: 0 0 0 1.5px rgba(124, 139, 150, 0.55), 0 20px 48px rgba(124, 139, 150, 0.38);
+}

@@ -1,0 +1,664 @@
+/* ================================================================
+   IMPORTPREDIC - components.css v2.0
+   Estetica clara tipo dashboard (tarjetas blancas, acentos morados
+   pastel, sombras suaves) inspirada en paneles de tipo "Taskly".
+================================================================ */
+
+/* ---- SECTION-DIVIDER ---- */
+.section-divider,
+hr.section-divider {
+  border: none;
+  height: 1px;
+  background: var(--border-soft);
+  margin: 36px 0 36px 0;
+}
+
+/* ================================================================
+   CHART CARD — envuelve cada grafica en una tarjeta con "glow"
+   tematico (claro/oscuro). El boton de icono abre un dialogo modal
+   nativo (st.dialog) con la grafica ampliada y su explicación
+   (components/chart_card.py)
+================================================================ */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.chart-card-marker) {
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--shadow-glow) !important;
+  background: var(--bg-card) !important;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.chart-card-marker):hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow-strong) !important;
+}
+
+.chart-card-marker { display: none; }
+
+.chart-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 1.02rem;
+  padding-top: 6px;
+}
+
+/* Boton de icono "ℹ️" de la card: circular, compacto, no envuelve texto */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.chart-card-marker) .stButton > button {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  border-radius: 50% !important;
+  background: var(--primary-light) !important;
+  color: var(--primary-dark) !important;
+  box-shadow: none !important;
+  border: 1px solid transparent !important;
+  font-size: 0.95rem !important;
+  line-height: 1 !important;
+  float: right;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.chart-card-marker) .stButton > button:hover {
+  background: var(--primary) !important;
+  color: var(--text-on-primary) !important;
+  transform: scale(1.08) !important;
+  box-shadow: var(--shadow-primary) !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.chart-card-marker) .stButton {
+  display: flex;
+  justify-content: flex-end;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.chart-card-marker) .stButton > button p {
+  font-size: 0.95rem !important;
+}
+
+/* ================================================================
+   MODAL DE EXPLICACIÓN (st.dialog) — panel lateral con la explicación
+================================================================ */
+.chart-explain-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: 20px 22px;
+  height: 100%;
+  animation: chartExplainIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.chart-explain-dialog-icon {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.chart-explain-dialog-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+.chart-explain-dialog-body {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.chart-explain-dialog-body p { margin: 0 0 12px 0; }
+.chart-explain-dialog-body p:last-child { margin-bottom: 0; }
+.chart-explain-dialog-body b { color: var(--text-primary); }
+
+@keyframes chartExplainIn {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ================================================================
+   DOWNLOAD CARD — tarjetas de descarga (Excel, etc.) de la pagina
+   de Reporte: icono con insignia de color + titulo + descripcion del
+   contenido + boton de descarga (components/download_card.py)
+================================================================ */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker) {
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--shadow-glow) !important;
+  background: var(--bg-card) !important;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  height: 100%;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker):hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow-strong) !important;
+}
+.download-card-marker { display: none; }
+
+.download-card-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 10px;
+}
+.download-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.download-card-icon.blue   { background: var(--accent-blue-bg);   color: var(--accent-blue); }
+.download-card-icon.green  { background: var(--accent-green-bg);  color: var(--accent-green); }
+.download-card-icon.amber  { background: var(--accent-amber-bg);  color: var(--accent-amber); }
+.download-card-icon.violet { background: var(--primary-light);    color: var(--primary); }
+
+.download-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+.download-card-format {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.download-card-desc {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  min-height: 58px;
+}
+
+/* El boton de descarga dentro de la card: version solida, a todo el
+   ancho, en el color de acento del card (via el mismo truco :has()) */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker.blue) .stDownloadButton > button {
+  background: var(--accent-blue) !important; border-color: transparent !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker.green) .stDownloadButton > button {
+  background: var(--accent-green) !important; border-color: transparent !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker.amber) .stDownloadButton > button {
+  background: var(--accent-amber) !important; border-color: transparent !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker.violet) .stDownloadButton > button {
+  background: var(--primary) !important; border-color: transparent !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker) .stDownloadButton > button {
+  color: var(--text-on-primary) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.download-card-marker) .stDownloadButton > button:hover {
+  filter: brightness(1.08);
+  transform: none !important;
+}
+
+/* El modal en si (fondo oscurecido + caja): reforzamos el look para
+   que combine con el tema activo en vez del gris neutro por defecto */
+div[data-testid="stDialog"] div[role="dialog"] {
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--shadow-glow-strong) !important;
+  border: 1px solid var(--border-soft) !important;
+}
+/* La caja visible del modal vive en el div padre de [role="dialog"];
+   Streamlit la pinta con un fondo fijo propio (no usa nuestras
+   variables), por lo que en modo oscuro se veia blanca. La forzamos
+   a usar el fondo de tarjeta del tema activo. */
+div[data-testid="stDialog"] > div {
+  background: var(--bg-card) !important;
+}
+div[data-testid="stDialog"] h1,
+div[data-testid="stDialog"] h2,
+div[data-testid="stDialog"] h3 {
+  color: var(--text-primary) !important;
+}
+/* El icono "X" para cerrar el modal viene con relleno negro fijo,
+   invisible en modo oscuro. Lo forzamos a seguir el color del tema. */
+div[data-testid="stDialog"] button[aria-label="Close"] svg,
+div[data-testid="stDialog"] button[aria-label="Close"] svg path {
+  fill: var(--text-primary) !important;
+}
+div[data-testid="stDialog"] button[aria-label="Close"]:hover svg,
+div[data-testid="stDialog"] button[aria-label="Close"]:hover svg path {
+  fill: var(--primary) !important;
+}
+
+/* ---- METRIC-CARD ---- */
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius-lg);
+  padding: 24px 28px;
+  margin: 20px 0 24px 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+
+.metric-card.improved {
+  background: var(--accent-green-bg);
+  border-color: rgba(46, 204, 143, 0.25);
+}
+
+.metric-card.degraded {
+  background: var(--accent-coral-bg);
+  border-color: rgba(255, 107, 129, 0.25);
+}
+
+/* Modo oscuro: bordes de metric-card con los tonos verde/terracota de la nueva paleta */
+body.dark-mode .metric-card.improved { border-color: rgba(95, 185, 138, 0.35); }
+body.dark-mode .metric-card.degraded { border-color: rgba(224, 121, 138, 0.35); }
+
+.metric-card::before {
+  content: '';
+  display: block;
+  height: 4px;
+  width: 44px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+.metric-card.improved::before { background: var(--accent-green); }
+.metric-card.degraded::before { background: var(--accent-coral); }
+
+/* ---- CARD-FUTURISTA (tarjeta general) ---- */
+.card-futurista {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius-lg);
+  padding: 22px 26px;
+  margin: 14px 0 18px 0;
+  transition: var(--transition-medium);
+  line-height: 1.7;
+  box-shadow: var(--shadow-card);
+}
+.card-futurista:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* ---- PAGE_LINK ---- */
+[data-testid="stPageLink"] {
+  margin-top: 24px !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+
+[data-testid="stPageLink"] a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 22px !important;
+  background: var(--primary-light) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.1px !important;
+  text-decoration: none !important;
+  transition: all 0.22s ease !important;
+}
+/* Aseguramos que el texto y el icono internos (que Streamlit pinta con
+   un color fijo inline) hereden el color legible del tema */
+[data-testid="stPageLink"] a * {
+  color: var(--text-primary) !important;
+}
+/* Modo oscuro: fondo del chip un poco mas presente para que resalte mas */
+body.dark-mode [data-testid="stPageLink"] a {
+  background: rgba(124, 139, 150, 0.22) !important;
+  border: 1px solid var(--border-soft) !important;
+}
+[data-testid="stPageLink"] a:hover {
+  background: var(--primary) !important;
+  color: var(--text-on-primary) !important;
+  box-shadow: var(--shadow-primary) !important;
+  transform: translateX(3px) !important;
+}
+[data-testid="stPageLink"] a:hover * {
+  color: var(--text-on-primary) !important;
+}
+
+/* ---- NAV SIDEBAR ---- */
+.nav-sidebar-item {
+  padding: 10px 14px;
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+.nav-sidebar-item.active {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+/* ---- MODEL-CARD ---- */
+.model-card {
+  border-radius: var(--border-radius-lg);
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-left: 4px solid var(--primary);
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- UPLOAD ZONE ---- */
+.upload-zone {
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--border-radius-lg);
+  padding: 32px;
+  text-align: center;
+  background: var(--bg-card-alt);
+  transition: var(--transition-medium);
+}
+.upload-zone.dragover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* ---- ALGORITHM BADGE ---- */
+.algorithm-badge {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.72rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  display: inline-block;
+  margin: 2px;
+}
+
+/* ---- VARIABLE TAG ---- */
+.variable-tag {
+  display: inline-block;
+  background: rgba(139, 92, 246, 0.1);
+  border: none;
+  color: var(--accent-violet);
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.72rem;
+  margin: 2px;
+}
+/* Modo oscuro: fondo del tag con el acento crema/dorado de la nueva paleta */
+body.dark-mode .variable-tag { background: rgba(216, 195, 156, 0.14); }
+
+/* ---- STATUS INDICATOR ---- */
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.status-indicator.ok     { background: var(--accent-green); box-shadow: 0 0 0 4px var(--accent-green-bg); }
+.status-indicator.error  { background: var(--accent-coral); box-shadow: 0 0 0 4px var(--accent-coral-bg); }
+.status-indicator.pending{ background: var(--accent-amber); box-shadow: 0 0 0 4px var(--accent-amber-bg); }
+
+/* ---- STEP BADGE ---- */
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* ---- BADGE INSUMO ---- */
+.badge-insumo {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.75rem;
+  background: var(--primary-light);
+  border: none;
+  color: var(--primary-dark);
+  margin-right: 6px;
+}
+
+/* ---- METRIC DISPLAY (numero grande) ---- */
+.metric-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--primary);
+}
+
+/* ---- TEXT UTILITIES ---- */
+.neon-text-cyan    { color: var(--primary);       font-weight: 600; }
+.neon-text-magenta { color: var(--accent-coral);  font-weight: 600; }
+.neon-text-green   { color: var(--accent-green);  font-weight: 600; }
+.neon-text-purple  { color: var(--accent-violet); font-weight: 600; }
+
+/* ---- STREAMLIT spacing ajustes ---- */
+[data-testid="stCaptionContainer"] {
+  margin-top: 6px !important;
+  margin-bottom: 16px !important;
+  color: var(--text-secondary) !important;
+}
+
+[data-testid="stAlert"] {
+  margin-bottom: 20px !important;
+  border-radius: var(--border-radius) !important;
+  font-family: var(--font-body) !important;
+}
+
+[data-testid="stDataFrame"] {
+  margin-bottom: 16px !important;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+}
+
+[data-testid="stMetric"] {
+  margin-bottom: 12px !important;
+}
+
+/* ---- HERO SECTION (pagina de inicio) ----
+   FIX: se elimina el rectangulo morado con degradado que envolvia la
+   escena 3D. No tenia ninguna funcionalidad (solo decorativo) y
+   estaba senalado como esteticamente vacio/feo. Ahora el contenedor
+   solo recorta bordes de la escena, sin fondo ni sombra propios. */
+.hero-section {
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+}
+
+/* ================================================================
+   WELCOME HERO — pagina "app" (bienvenida / landing)
+================================================================ */
+.welcome-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-xl);
+  background: linear-gradient(150deg, var(--bg-card) 0%, var(--bg-card-alt) 100%);
+  border: 1px solid var(--border-soft);
+  padding: 56px 52px;
+  margin-bottom: 6px;
+  box-shadow: var(--shadow-glow-strong);
+}
+.welcome-hero-glow, .welcome-hero-glow-2 {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(6px);
+}
+.welcome-hero-glow {
+  top: -140px; right: -120px;
+  width: 440px; height: 440px;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 72%);
+  opacity: 0.30;
+}
+.welcome-hero-glow-2 {
+  bottom: -160px; left: -100px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, var(--accent-amber) 0%, transparent 72%);
+  opacity: 0.22;
+}
+.welcome-hero-content { position: relative; z-index: 1; max-width: 700px; }
+.welcome-hero-eyebrow {
+  font-family: var(--font-mono);
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  color: var(--accent-amber);
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.welcome-hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 3rem;
+  line-height: 1.08;
+  color: var(--text-primary);
+  margin: 0 0 18px 0;
+}
+.welcome-hero-title span { color: var(--primary); }
+.welcome-hero-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.welcome-hero-tags { position: relative; z-index: 1; margin-top: 26px; display: flex; gap: 10px; flex-wrap: wrap; }
+.welcome-hero-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 5px 13px;
+}
+
+/* ---- Grilla de etapas (pipeline) ---- */
+.stage-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 10px 0 8px 0;
+}
+.stage-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius-lg);
+  padding: 22px 20px 20px 20px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.stage-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-hover); }
+.stage-number {
+  position: absolute;
+  top: 16px; right: 18px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.stage-icon {
+  width: 46px; height: 46px;
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.45rem;
+  background: var(--primary-light);
+  margin-bottom: 14px;
+}
+.stage-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  margin-bottom: 6px;
+}
+.stage-desc { color: var(--text-secondary); font-size: 0.82rem; line-height: 1.55; }
+
+/* ---- CTA principal ---- */
+a.welcome-cta-primary, a.welcome-cta-primary:visited {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--primary);
+  color: var(--text-on-primary) !important;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+  padding: 14px 28px;
+  border-radius: var(--border-radius);
+  text-decoration: none !important;
+  box-shadow: var(--shadow-primary);
+  transition: var(--transition-fast);
+}
+a.welcome-cta-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow-strong); }
+a.welcome-cta-secondary, a.welcome-cta-secondary:visited {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--text-primary) !important;
+  font-family: var(--font-display); font-weight: 600; font-size: 0.92rem;
+  padding: 14px 10px;
+  text-decoration: none !important;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition-fast);
+}
+a.welcome-cta-secondary:hover { border-bottom-color: var(--primary); }
+
+@media (max-width: 1100px) {
+  .stage-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ==========================================================================
+   v2.0 — Cuenta de usuario, historial y administración
+   ========================================================================== */
+.sidebar-user {
+  display: flex; align-items: center; gap: 10px;
+  margin: 14px 0 12px; padding: 10px 12px;
+  background: var(--bg-card-alt); border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius);
+}
+.sidebar-avatar {
+  width: 34px; height: 34px; flex: 0 0 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--primary); color: var(--text-on-primary);
+  font-family: var(--font-display); font-weight: 600;
+}
+.sidebar-user-name { font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+.sidebar-user-role { font-size: 0.76rem; color: var(--text-secondary); }
+
+.run-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 4px; }
+.run-chip {
+  font-size: 0.74rem; padding: 2px 9px; border-radius: 999px;
+  background: var(--primary-soft); color: var(--text-secondary);
+  border: 1px solid var(--border-soft); white-space: nowrap;
+}
+.run-chip.ok   { background: var(--accent-green-bg); color: var(--text-primary); }
+.run-chip.bad  { background: var(--accent-coral-bg); color: var(--text-primary); }
+.run-chip.warn { background: var(--accent-amber-bg); color: var(--text-primary); }
+body.dark-mode .run-chip { background: rgba(237, 231, 218, 0.06); }
+
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.kpi-tile {
+  background: var(--bg-card); border: 1px solid var(--border-soft);
+  border-radius: var(--border-radius); padding: 14px 16px;
+}
+.kpi-tile .kpi-label { font-size: 0.74rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .6px; }
+.kpi-tile .kpi-value { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); margin-top: 2px; }
