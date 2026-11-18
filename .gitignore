@@ -1,0 +1,30 @@
+# --- Secretos: NUNCA al repositorio ---
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+data/.secret_key
+
+# --- Base de datos local y datos generados ---
+data/*.db
+data/*.db-*
+data/history/
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+models_saved/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# --- Sistema operativo / editores ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
