@@ -1,0 +1,23 @@
+# Tema base claro (el interruptor sol/luna de la app maneja el modo oscuro
+# con su propio CSS; esto solo fija el punto de partida de los widgets
+# nativos de Streamlit para que no dependan del tema del sistema operativo).
+[theme]
+base = "light"
+primaryColor = "#6C63FF"
+backgroundColor = "#F5F4FC"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#33324D"
+
+[server]
+# Tamaño máximo por archivo subido (MB).
+maxUploadSize = 25
+enableXsrfProtection = true
+enableCORS = true
+
+[client]
+# No mostrar trazas de error (rutas internas, código) a los usuarios.
+showErrorDetails = false
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
